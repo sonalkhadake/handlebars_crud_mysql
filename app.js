@@ -37,7 +37,7 @@ const sequelize = new Sequelize(process.env.DATABASE, process.env.MYSQLUSERNAME,
     }
   }
 
-  const Employee= sequelize.define("employee", {
+  const Employee = sequelize.define("employees", {
       // Model attributes are defined here
       name: {
         type: DataTypes.STRING,
@@ -59,20 +59,7 @@ const sequelize = new Sequelize(process.env.DATABASE, process.env.MYSQLUSERNAME,
      
    
      } );
-     // home page
-   
-
-    // app.get("/", (req, res) => {
-    //     Employee.findAll().then((data) => {
-    
-    //       res.render("home", { data: data });
-    //     });
-    // //   });
-    // app.get("/", (req,res) => {
-    //     res. render("home", {data:"hellow"})
-    // })
-
-
+     
     app.get("/",async(req,res)=>{
 
         try{
@@ -129,7 +116,7 @@ const sequelize = new Sequelize(process.env.DATABASE, process.env.MYSQLUSERNAME,
     app.get("/edit/:empID", async(req,res)=>{
 
       try{
-        const user = await Employee.findAll({
+        const user = await Employee.findOne({
           where:{
             empID:req.params.empID
           }
