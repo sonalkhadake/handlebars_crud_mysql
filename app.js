@@ -37,7 +37,7 @@ const sequelize = new Sequelize(process.env.DATABASE, process.env.MYSQLUSERNAME,
     }
   }
 
-  const Employee= sequelize.define("employees", {
+  const Employee= sequelize.define("employee", {
       // Model attributes are defined here
       name: {
         type: DataTypes.STRING,
@@ -59,10 +59,47 @@ const sequelize = new Sequelize(process.env.DATABASE, process.env.MYSQLUSERNAME,
      
    
      } );
+     // home page
+   
+
+    // app.get("/", (req, res) => {
+    //     Employee.findAll().then((data) => {
+    
+    //       res.render("home", { data: data });
+    //     });
+    // //   });
+    // app.get("/", (req,res) => {
+    //     res. render("home", {data:"hellow"})
+    // })
+
+
+    app.get("/",async(req,res)=>{
+
+        try{
+          const user = await Employee.findAll();
+          
+           
+        res.render("home", {data:user});
+        console.log(user)
+        //   res.json({message:"Success",data:user})
+
+        }
+        catch(err){
+      
+          res.json({message:"Error",data:err})
+      
+        }
+      
+      
+      })
+      
+
+
+
 
 // render the employee page
-     app.get("/", (req,res)=>{
-         res.render("employee")
+     app.get("/createAccount", (req,res)=>{
+         res.render("employee" )
      })
 
      // creating account
@@ -75,7 +112,8 @@ const sequelize = new Sequelize(process.env.DATABASE, process.env.MYSQLUSERNAME,
              place:body.place
            });
             console.log(req.body)
-          res.json({message:"Success",data:user})
+        //   res.json({message:"Success",data:user})
+        res.redirect("/")
         }
         catch(err){
     
@@ -85,7 +123,86 @@ const sequelize = new Sequelize(process.env.DATABASE, process.env.MYSQLUSERNAME,
     
     
     })
+    ///////edit route
+    // edit user page
+
+    app.get("/edit/:empID", async(req,res)=>{
+
+      try{
+        const user = await Employee.findAll({
+          where:{
+            empID:req.params.empID
+          }
+        });
+        // res.json({message:"success", data:user})
+        res.render("edit", {data:user})
+    console.log(user)
+      }
+      catch(err){
     
+        res.json({message:"Error",data:err})
+    
+      }
+    
+    
+    })
+
+    //////////updating user
+    app.post("/editUser/:empID", async(req,res)=>{
+      try{
+        const body= req.body
+    
+      const user =await Employee.update({
+             name: body.name,
+             age:body.age,
+             place:body.place
+        
+      },
+        {
+        where:{
+          empID:req.params.empID
+        }
+        
+        
+    
+      });
+      console.log(user)
+      res.redirect("/")
+      // res.json({message:"success", data:data})
+    
+    }catch(err){
+    
+      res.json({message:"Error",data:err})
+    
+    }
+    })
+ 
+
+
+
+    ////////delete the user
+
+    app.get("/delete/:empID",async(req,res)=>{
+
+  try{
+    const user = await Employee.destroy({
+      where:{
+        empID:req.params.empID
+      }
+    });
+    
+      res.redirect("/")
+    // res.json({message:"Success"})
+  }
+  catch(err){
+
+    res.json({message:"Error",data:err})
+
+  }
+
+
+})
+
 
 
 
